@@ -1,23 +1,45 @@
 module.exports = {
+  pathPrefix: `my-blog`,
   plugins: [
     {
       resolve: `gatsby-theme-blog`,
       options: {},
     },
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 590,
+            },
+          },
+
+
+        ],
+      },
+    },
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-sharp`,
   ],
   // Customize your site metadata:
   siteMetadata: {
-    title: `My Blog Title`,
-    author: `My Name`,
-    description: `My site description...`,
+    title: `My Blog (Round 2)`,
+    author: `Al Piepho`,
+    description: `My first blog, well actually @nd`,
     social: [
       {
-        name: `twitter`,
-        url: `https://twitter.com/gatsbyjs`,
+        name: `linkedin`,
+        url: `https://www.linkedin.com/in/al-piepho-fw-sw-engineer/`,
       },
       {
         name: `github`,
-        url: `https://github.com/gatsbyjs`,
+        url: `https://github.com/alpiepho`,
+      },
+      {
+        name: `twitter`,
+        url: `https://twitter.com/apiepho1`,
       },
     ],
   },

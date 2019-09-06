@@ -1,0 +1,53 @@
+---
+title: Ported to Gatsby Theme Blog
+date: "2019-09-06"
+description: "Ported to Gatsby Theme Blog"
+---
+
+I wanted to experiment with [Gatsby Theme Blog](https://www.gatsbyjs.org/packages/gatsby-theme-blog/)
+and see if I could port my [First Blog](https://alpiepho.github.io/my-blog/), and how hard it would
+be.
+
+I was able to build a simple node.js script to convert the data from the First Blog to a form that
+is used by the Gatsby Theme Blog.  It was fairly straightforward, with some image files renaming (since
+the new format is flatter), and conversion of the date string (I had expanded from date to date+time...
+can't see how to do that here yet).
+
+Also, getting images to work was a littl tricky with adding npm packages and configs:
+   - "gatsby-image": "^2.2.17",
+   - "gatsby-transformer-remark": "^2.6.21",
+   - "gatsby-transformer-sharp": "^2.2.13",
+
+And some changes to gatsby-config.js:
+```
+  plugins: [
+...
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 590,
+            },
+          },
+
+
+        ],
+      },
+    },
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-sharp`,
+...
+```
+(I confess, I copied that from my previous blog, and didn't just know how to configure those
+plug ins)
+
+Now I just need to add GH Pages deploy and test it.
+
+## TODO
+- convert date to date+time
+
+
+
