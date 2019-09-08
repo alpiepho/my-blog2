@@ -1,0 +1,22 @@
+---
+title: Meld for Mac Workaround
+date: "2019-09-08"
+description: "Meld for Mac Workaround"
+---
+
+I really love the Linux tool 'Meld' to compare files and directories.  There is a port
+to Mac that I rely on...I'm almost crippled without it :)
+
+Unfortunately, the past upgrade of Mac OS has caused an ugly interaction whn closing
+Meld.
+
+The problem is related how the app is closed. If you use the Menu option, the saved 
+state is removed cleaning. If you close using the window close (read circle), the saved 
+state remains. Somehow, when this there, the application will not open from command line.
+Sometimes it will open, but you need to manually switch to the Meld application from the tool bar.
+
+I have cobbled together a workaround, described [here](https://gist.github.com/alpiepho/20f07bf5365bc2617fcf8594b9e4a7f2).
+
+
+Someday, I would love to convert it to Javascript and build a VS Code plugin.  
+Maybe I'm too much of a geek, but that would be super-useful for me.
