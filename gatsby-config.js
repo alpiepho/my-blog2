@@ -27,7 +27,7 @@ module.exports = {
       options: {
         name: `My Blog (Round 2)`,
         short_name: `My Blog2`,
-        start_url: `/my-blog2/`,
+        start_url: `/my-blog2/`,  // specific to gh-pages?
         background_color: `#0d4e8c`,
         theme_color: `#2876C0`,
         // Enables "Add to Homescreen" prompt and disables browser UI (including back button)
