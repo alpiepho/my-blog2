@@ -1,0 +1,36 @@
+---
+title: Planning Repo Summary
+date: "2020-04-15"
+description: "How to summarize my Github repos"
+---
+
+To go along with my post that summarizes all my LinkedIn posts, I want to add a post to
+summarize all my Github repos.  Why?  Because I'm sitting at 114 repos, including 20 forks.
+
+I really need to do this summary because I have forgotten many of them.  Also, the web UI for 
+Github doesn't let you list all repos with out paging.
+
+I see 2 options as a starting point:
+
+1) write a Puppeteer script to web-scrape the data
+2) use a Github api to gather details
+
+A quick look for the Github api, I found that I can send:
+
+[https://api.github.com/users/alpiepho/repos?per_page=1&page=2](https://api.github.com/users/alpiepho/repos?per_page=1&page=2)
+
+
+And get json data for each of my repos.  I think I can use that get to the README.md file, like:
+
+https://raw.githubusercontent.com/alpiepho/any-counter/master/README.md
+
+As much fun as it would be to create a Puppeteer script, it looks like it will be better to create
+a simple python script that parse the Github api data.
+
+The [reference](https://stackoverflow.com/questions/8713596/how-to-retrieve-the-list-of-all-github-repositories-of-a-person) 
+I found with details about the Github api, also describes using tokens.  Might need that.
+
+Looks like is time to give up {} and ;'s for awhile :smile:
+
+
+**DANG:** looks like my emoji's are failing.  so :sad: 
