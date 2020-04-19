@@ -1,9 +1,13 @@
 This is a simple utilty to build the post "github-summary.mdx".  It uses node and axois.
 
-One wierd thing is the stdout contains the node command line.  Please use something
-like the following to avoid the problem:
+One wierd thing is the stdout contains the node command line.  Please manually remove
+the first 4 lines:
+```
 
-npm start  | grep -e '^>' -v > ../content/posts/github-summary.md
+> repodata@1.0.0 start /Users/al/Projects/gatsby/my-blog2/repodata
+> node build_summary.js
+
+```
 
 Another current issues is a rate limit on the github api.  Currently this is 60/hr
 without any authentication.  When athentication is implmented, this should go up to

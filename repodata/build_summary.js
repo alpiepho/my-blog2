@@ -1,7 +1,5 @@
-// TODO: test for README.md, if missing, change link and give warning
 // TODO: create token and get private repos
 // TODO: change some repos to private
-// TODO: mark some repose as archived?
 // TODO: grab screen shots for key projects, or pull from repo
 // TODO: roll this to "better gh profile page???"
 
@@ -22,7 +20,7 @@ date: "2020-04-18"\n\
 description: "Summary of my Github Repos"\n\
 ---\n\
 \n\
-(Warning: many images) This a sumary of all the Github Repos I have added over the years.  Some are forks of other projects with minor changes.  Most are orignal works.\n\
+(Warning: many images) This a summary of all the Github Repos I have added over the years.  Some are forks of other projects with minor changes.  Most are orignal works.\n\
 '
 
 // these are extra notes to be aded to the generated summary page based on the repo name
@@ -565,6 +563,12 @@ function inExtra(name) {
   return ["", ""]
 }
 
+function addExtra(array) {
+  array.forEach((element) => {
+    [element.notes, element.ideas] = inExtra(element.name)
+  })
+}
+
 function sortByKey(array, key) {
   return array.sort(function (a, b) {
     var x = a[key]
@@ -573,10 +577,25 @@ function sortByKey(array, key) {
   })
 }
 
+function getCounts(array) {
+  privateCount = 0
+  publicCount = 0
+  forkCount = 0
+  array.forEach((element) => {
+    if (!element.public) privateCount += 1
+    if (element.public) publicCount += 1
+    if (element.fork) forkCount += 1
+  })
+  return [privateCount, publicCount, forkCount]
+}
+
 function finish(header, jsonData) {
+  addExtra(jsonData)
   jsonData = sortByKey(jsonData, "name")
 
-  // TODO:  find counts for forked,private,public
+  let privateCount, publicCount, forkCount
+  [privateCount, publicCount, forkCount] = getCounts(jsonData)
+
   header +=
     "\
   \n\
@@ -584,7 +603,7 @@ function finish(header, jsonData) {
   \n\
   **NOTE:** This lists " +
     jsonData.length +
-    " repos, while Github counts 114.  I think it is public vs. private.\n\
+    " repos total, " + forkCount + " forked, " + publicCount + " public, and " + privateCount + " private.\n\
   \n\
   \n"
 
@@ -619,25 +638,29 @@ function finish(header, jsonData) {
         "[](../assets/github-repos__screenshot-" + element.id + ".png)"
       )
     }
-    console.log(
-      "[" + element.name + "](" + element.html_url + "/blob/master/README.md)"
-    )
+    if (element.hasREADMEmd) {
+      console.log(
+        "[" + element.name + "](" + element.html_url + "/blob/master/README.md)"
+      )  
+    } else {
+      console.log(
+        "[" + element.name + "](" + element.html_url + ")"
+      )  
+    }
     description = "(see link)"
     if (element.description) description = element.description
     console.log(": " + description)
-    ;[notes, ideas] = inExtra(element.name)
-    if (notes) console.log("- " + notes)
-    if (ideas) console.log("- " + ideas)
+    if (element.notes) console.log("- " + element.notes)
+    if (element.ideas) console.log("- " + element.ideas)
     console.log("")
   })
 }
 
-let jsonData = []
 let promises = []
+let jsonData = []
 for (i = 1; i <= MAX_GHAPI_MAXPAGES; i++) {
   promises.push(
     axios.get(github_base + i).then((response) => {
-      // do something with response
       response.data.forEach((element) => {
         jsonData.push(element)
       })
@@ -649,11 +672,25 @@ for (i = 1; i <= MAX_GHAPI_MAXPAGES; i++) {
   )
 }
 
-Promise.all(promises).then(() => finish(header, jsonData))
-
-//DEBUG
+//DEBUG: if you want to skip gathe of API above and the Promise.all below
 // this is cut/paste from running the following, manually in a browser
 // https://api.github.com/users/alpiepho/repos?per_page=100&page=1
 // https://api.github.com/users/alpiepho/repos?per_page=100&page=2
-//let jsonData = require('./list.json')
-//finish(header, jsonData)
+// let jsonData = require('./list.json')
+
+Promise.all(promises).then(() => {
+  //DEBUG: if you skip README check
+  //finish(header, jsonData)
+  let promises = []
+  jsonData.forEach(element => {
+    //console.log(element.html_url + "/blob/master/README.md")
+    promises.push(
+      axios.get(element.html_url + "/blob/master/README.md").then((response) => {
+        //console.log(element.html_url + " has a README")
+        element.hasREADMEmd = true
+      })
+      .catch(error => {})
+    )
+  })
+  Promise.all(promises).then(() => finish(header, jsonData))
+})
