@@ -1,0 +1,31 @@
+---
+title: Learning from Repo Summary
+date: "2020-04-19"
+description: "Learnings from Repo Summary"
+---
+
+I did go down the path to use the Github api to gather a bunch of json data that
+described all the repos in my account.
+
+I wound up creating a small node.js app using axios to call the api several times because
+the api had a limit on number of items per page.
+
+I also hit a problem using the api to get details about repos marked private.  I never did get
+that working and manually created a file, private.json, to carry that data.  In the end I 
+decided not to list the private repos.
+
+This effort was good, because it forced me to review my-then 114 repos (including 20 forks).  I was
+able to remove some forks, and moved a lot of old/stale items to private....so it only clutters
+up my view.
+
+One idea that came of this effort, is that I want to design a Github hosted page that use 
+Github actions to generate a better landing page, then I can pin that single page and re-direct
+people there.  Then I can add features:
+
+- List ALL repos, instead of the forced paging
+- allow sorting
+- Tweek the activity graph
+- Add any other details I think are cool
+
+Unfortunately, I think I need to look into the missing emoji's first...:sadface:
+

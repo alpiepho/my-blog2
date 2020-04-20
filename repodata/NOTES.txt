@@ -9,6 +9,8 @@ the first 4 lines:
 
 ```
 
+or npm start | awk 'NR>4'
+
 Another current issues is a rate limit on the github api.  Currently this is 60/hr
 without any authentication.  When athentication is implmented, this should go up to
 5000/hr.
