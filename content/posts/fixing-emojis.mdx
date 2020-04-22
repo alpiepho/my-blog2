@@ -1,0 +1,105 @@
+---
+title: Fixing Emojis
+date: "2020-04-20"
+description: "How I fixed emojis in this Gatsby site"
+---
+
+I'm starting this post **BEFORE** I have the emojis fixed...hope fully there is no "Murphys Law" jinx.
+
+This should be an emoji - :smile:.
+
+Piece of cake :cake: ... ~~not~~!.  But, I did learn a ton, like that strikethru.  I spend 3 days to
+figure this out, so here is what I learned.
+
+### The solution
+Found final clue to the solution [here](https://github.com/ChristopherBiscardi/gatsby-mdx/issues/118) and
+this [github repo](https://github.com/rawkode/modern-life/blob/81dcc43e27f240128906adc9a8cbe51fdcdb9850/gatsby-theme-rawkode/gatsby-config.js#L73).
+I discovered this early on, but it would not have helped without another change.
+
+The solution is to add require(`remark-emoji`) to the remarkPlugins option for the gatsby-plugin-mdx.
+The [documentation](https://github.com/gatsbyjs/gatsby/tree/master/packages/gatsby-plugin-mdx) does
+discuss using the standard "Remark Plugins", but that doesn't sink in when you have multiple emoji npm
+packages to chose from....I found these:
+
+- [gatsby-pluging-emojis](https://www.npmjs.com/package/gatsby-remark-emojis)
+- [gatsby-plugin-emoji](https://www.npmjs.com/package/gatsby-remark-emoji)
+- [remark-emoji](https://www.npmjs.com/package/remark-emoji)
+
+Which would you pick for a Gatsby project?
+
+Like I said before, the link that gave me the final piece was not enough.  I think I did try adding that
+directly to my project (gatsby_config.js for this blog site), but it didn't work.  
+
+I was missing the the fact that my blog was created using a Gastby starter project, [gatsby-theme-blog](https://www.npmjs.com/package/gatsby-theme-blog),
+was also setting gatsby-plugin-mdx settings (actually in the gatsby-theme-blog-core).  
+
+Are you confused yet?  Me too.  It took a lot of digging thru code in the node_modules installed 
+packages and learning to use the node debugger (more in the next section).  I finally found the flag
+`mdxOtherwiseConfigured` for gatsby-theme-blog.  Yes is is documented, but didn't jump out at me.
+
+Using that flag, and copying the gatsby_config.js settings for gatsby-plugin-mdx from 
+gatsby-theme-blog-core, I was finally able to add the "require(`remark-emoji`)" statement:
+
+```
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.mdx`, `.md`],
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              // should this be configurable by the end-user?
+              maxWidth: 1380,
+              linkImagesToOriginal: false,
+            },
+          },
+          { resolve: `gatsby-remark-copy-linked-files` },
+          { resolve: `gatsby-remark-smartypants` },
+        ],
+        remarkPlugins: [require(`remark-slug`), require(`remark-emoji`)],
+                                                ^
+                                                ^^
+                                                ^^^
+      },
+```
+
+:rocket:  Sorry for all the "gatsby-plugin-blah-blah" terms, but I'm trying to keep this straight myself.
+
+
+
+
+### Learned to debug Gatsby
+
+After a day of searching on Google for hints, and then resorting to dig into the installed packages in node_modules,
+I was starting to get desperate.  I had heard it was possible to debug the Gatsby build process using
+standard Browser tools.  I already had some experience debugging Web App Javascript and HTML using both
+Chrome and Firefox developer tools.  "How hard could it be?".  
+
+With a little searching, I found how to invoke the debugger:
+
+```
+gatsby clean
+node --inspect-brk --no-lazy node_modules/gatsby/dist/bin/gatsby build
+```
+<br/>
+
+This cleans up all the generated post pages from the  .mdx files, then launches
+the node debugger.
+
+I have to admit, I still don't fully understand how the Gatsby build system works, but I know
+more than I did before I started.  At least, it lead me to the `mdxOtherwiseConfigured`.  It
+also lead me to the commented out code for mutateSource, which intern was the right Google
+search term I need to find the last piece.
+
+I the end, I finally found how to fix my emojis :+1: ... and learned something. :books:
+
+### Here are some followup tasks:
+- investigate in gasty repo for gatsby-plugin-mdx when the call to mutateSource was commented out
+  - 2 years ago by Christopher Biscardi (just love VS Code Gitlens plugin)
+- Decide if I should comment or tray to add warning and offer PR
+- Add issue to gastby-theme-blog and possible PR to update README.md about how to add emoji
+- Learn how to control my overuse of emojis :boom: :smile:
+
+
+
+
