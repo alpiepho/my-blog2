@@ -10,6 +10,6 @@ export default () => (
     Hi I'm Al!  This is my "new-and-improved" blog.
     {` `}
     <br />
-    Also visit my <Styled.a href="https://alpiepho.github.io/project-portfolio">portfolio</Styled.a>.
+    Also visit my <Styled.a href="https://alpiepho.github.io/project-portfolio3">portfolio</Styled.a>.
   </Fragment>
 )
